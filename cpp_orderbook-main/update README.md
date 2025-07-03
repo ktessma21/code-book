@@ -1,55 +1,94 @@
-📈 High-Performance C++ Order Book
-Summary
-This project implements an ultra-high-performance C++ order book capable of processing over 5 million orders per second per CPU core. It supports both limit and market orders, and uses fixed-point arithmetic via cpp_fixed to maintain high precision and speed.
+# 🏦 High-Performance C++ Order Book Engine
 
-The design is inspired by go-trader and integrates seamlessly with broader trading systems such as cpp-trader.
+## 📘 Overview
 
-🛠 Build Instructions
-To build the project:
+This project implements an ultra-high-performance **C++ financial exchange order book**, capable of handling over **5 million orders per second per CPU core**. It supports **limit** and **market** orders and is optimized for **low latency**, **memory efficiency**, and **multi-core scalability**.
 
-Clone cpp_fixed at the same directory level.
+Fixed-point arithmetic is handled via [cpp_fixed](https://github.com/robaho/cpp_fixed) to ensure precision without floating-point overhead.
 
-Install the Boost Unit Testing Framework.
+> Inspired by concepts from [go-trader](https://github.com/robaho/go-trader) and designed for extensibility in high-frequency trading environments.
 
-Run make (uses Clang by default). For GCC, use Makefile.gcc.
+---
 
-🧪 Running Tests
-Run all unit tests using:
+## ⚙️ Features
 
-bash
-Copy
-Edit
+- 🔁 Supports limit and market orders
+- 🚀 Ultra-low latency: ~5–10M ops/sec per core
+- 🧮 Fixed-point math via `cpp_fixed`
+- 🧵 Lock-free and CPU-bound performance scaling
+- 🧩 Modular design for easy integration and extension 
+
+---
+
+## 🛠 Build Instructions
+
+1. Clone [cpp_fixed](https://github.com/robaho/cpp_fixed) at the same directory level as this repo.
+2. Ensure Boost Unit Test Framework is installed:  
+   [Boost Test Docs](https://www.boost.org/doc/libs/1_87_0/libs/test/doc/html/index.html)
+3. Build with:
+
+```bash
+make           # uses Clang by default
+make -f Makefile.gcc   # for GCC
+```
+
+---
+
+## ✅ Running Tests
+
+```bash
 make run_tests
-📂 Usage
-exchange.h — Public API
+```
 
-orderbook.h — Core single-threaded order book logic
+All unit tests will be executed using the Boost test framework.
 
-⚙️ Performance Tuning
-The PriceLevels implementation can be customized by editing the typedef in pricelevels.h.
+---
 
-Performance varies by container implementation (deque, vector, map, etc.) and price level depth (e.g., 10 vs. 1000 levels). Sample throughput ranges from 5M–10.5M orders/sec per core depending on configuration.
+## 📂 Project Structure
 
-For multithreaded benchmarks and profiling, refer to:
+| File | Description |
+|------|-------------|
+| `exchange.h` | Public API for interacting with the order book |
+| `orderbook.h` | Core order book logic (single-threaded) |
+| `benchmark_test.cpp` | Performance benchmarks |
+| `benchmark_multithread_test.cpp` | Multi-core performance test suite |
 
-benchmark_test.cpp
+---
 
-benchmark_multithread_test.cpp
+## 📊 Performance
 
-📊 Performance Snapshot
-Insert performance: 5.5M – 10.5M ops/sec
+Tested on a 4.0 GHz Quad-Core Intel Core i7 (macOS):
 
-Insert + match (30%): 4M – 8M ops/sec
+| Operation | Throughput |
+|----------|------------|
+| Insert (no match, 10 levels) | 7.9M – 10.4M ops/sec |
+| Insert + Match (30%) | 4M – 8M ops/sec |
+| Cancel | 4.3M – 8.5M ops/sec |
 
-Cancel performance: 4M – 8.5M ops/sec
+Multicore scaling with one instrument per core achieves:
 
-With multiple instruments per core:
+- ⚡ **22M+ orders/sec**
+- ⏱ **<50ns per insert**
+- 📉 **<70ns per cancel**
 
-<50ns per insert → 22M+ orders/sec
+> Performance is highly dependent on price level depth and the chosen container (`vector`, `map`, `deque`, etc.). See `pricelevels.h` for configuration.
 
-<70ns per cancel → 13M+ cancels/sec
+---
 
-Performance is CPU-bound and scales well with additional cores, aided by lock-free data structures.
+## 📌 Notes
 
-📌 Notes
-This project is designed as a low-latency, memory-efficient order book engine for use in exchange and trading simulations. While tuned for speed, it prioritizes clean design and modularity, making it a flexible foundation for further experimentation or integration into more complete trading systems.
+This engine is built for experimentation and educational use in **quantitative finance**, **exchange simulations**, or **trading infrastructure prototypes**. It emphasizes **readable, clean design** while pushing system-level performance boundaries.
+
+---
+
+## 📎 Dependencies
+
+- C++17+
+- [Boost](https://www.boost.org/)
+- [cpp_fixed](https://github.com/robaho/cpp_fixed)
+
+---
+
+## 📬 Contact
+
+Feel free to fork, open issues, or contribute improvements.
